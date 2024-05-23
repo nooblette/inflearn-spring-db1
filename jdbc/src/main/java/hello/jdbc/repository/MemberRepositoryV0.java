@@ -84,6 +84,54 @@ public class MemberRepositoryV0 {
 		}
 	}
 
+	public void update(String memberId, int money) throws SQLException {
+		String sql = "update member set money = ? where member_id = ?";
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, money); // PreparedStatement에 파라미터 세팅
+			pstmt.setString(2, memberId);
+
+			// executeUpdate() : 영향받은 row의 수를 반환
+			int resultSize = pstmt.executeUpdate();
+			log.info("reulstSize={}", resultSize);
+		} catch (SQLException e) {
+			log.error("db error", e);
+			throw e;
+		} finally {
+			// 선언 순서 : connection -> statement -> resultSet
+			// 리소스 해제 순서 : resultSet -> statement -> connection
+			close(conn, pstmt, null);
+		}
+	}
+
+	public void delete(String memberId) throws SQLException {
+		String sql = "delete from member where member_id = ?";
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId); // PreparedStatement에 파라미터 세팅
+
+			// executeUpdate() : 영향받은 row의 수를 반환
+			int resultSize = pstmt.executeUpdate();
+			log.info("reulstSize={}", resultSize);
+		} catch (SQLException e) {
+			log.error("db error", e);
+			throw e;
+		} finally {
+			// 선언 순서 : connection -> statement -> resultSet
+			// 리소스 해제 순서 : resultSet -> statement -> connection
+			close(conn, pstmt, null);
+		}
+	}
 	private void close(Connection conn, Statement stmt, ResultSet rs) {
 		// Statement : SQL을 그대로 실행
 		// PreparedStatement와 : SQL에 파라미터를 바인딩하고 실행할 수 있다, Statement를 상속받는다.
