@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.NoSuchElementException;
 
 import hello.jdbc.connection.DBConnectionUtil;
 import hello.jdbc.domain.Member;
@@ -43,6 +44,43 @@ public class MemberRepositoryV0 {
 			// pstmt.close();
 			// conn.close();
 			close(conn, pstmt, null);
+		}
+	}
+
+	public Member findById(String memberId) throws SQLException {
+		String sql = "select * from member where member_id = ?";
+
+		Connection conn = null; // finally 구문에서 conn 참조 변수에 접근해야하기 때문에, null로 초기화하여 선언한다.
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId); // PreparedStatement에 파라미터 세팅
+
+			// executeUpdate() : 데이터를 넣거나 변경할때 호출, 영향받은 row의 수를 반환한다.
+			// executeQuery() : 조화쿼리 호출시 사용, ResultSet을 반환한다(ResultSet = SELECT 쿼리의 결과를 담고있는 통)
+			rs = pstmt.executeQuery();
+
+			// ResultSet 첫 1회는 next() 호출
+			if(rs.next()) {
+				Member member = new Member();
+				member.setMemberId(rs.getString("member_id"));
+				member.setMoney(rs.getInt("money"));
+
+				return member;
+			} else {
+				// 예외를 던질때는 에러와 로깅 메시지를 잘 작성하는 것이 중요하다. (모니터링하면서 어디서 문제가 생겼는지 간결하고 정화하고 빠르게 파악하기 위함)
+				throw new NoSuchElementException("member not found member id=" + memberId);
+			}
+		} catch (SQLException e) {
+			log.error("db error", e);
+			throw e;
+		} finally {
+			// 선언 순서 : connection -> statement -> resultSet
+			// 리소스 해제 순서 : resultSet -> statement -> connection
+			close(conn, pstmt, rs);
 		}
 	}
 
