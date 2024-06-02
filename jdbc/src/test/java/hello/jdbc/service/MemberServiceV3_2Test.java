@@ -22,26 +22,26 @@ import lombok.extern.slf4j.Slf4j;
  * 트랜잭션 - 커넥션 파라미터 전달 방식 동기화
  */
 @Slf4j
-class MemberServiceV3_1Test {
+class MemberServiceV3_2Test {
 	public static final String MEMBER_A = "memberA";
 	public static final String MEMBER_B = "memberB";
 	public static final String MEMBER_EX = "ex";
 
 	private MemberRepositoryV3 memberRepository;
-	private MemberServiceV3_1 memberService;
+	private MemberServiceV3_2 memberService;
 
 
-	@BeforeEach // 각각의 테스트가 수행되기 직전에 호출(BeforeEach 호출 -> Test 호출 -> BeforeEach 호출 -> Test 호출 -> ...)
+	@BeforeEach // 각각의 테스트가 수행되기 직전에 호출
 	void beforeEach() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
 		memberRepository = new MemberRepositoryV3(dataSource);
 
 		// DataSource를 직접 주입하지 않고 추상화된 transactionManager를 주입한다.
 		PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-		memberService = new MemberServiceV3_1(transactionManager, memberRepository);
+		memberService = new MemberServiceV3_2(transactionManager, memberRepository);
 	}
 
-	@AfterEach // 각각의 테스트가 수행된 직후에 호출, 리소스 정리(Test 호출 -> AfterEach 호출 -> Test 호출 -> AfterEach 호출 -> ...)
+	@AfterEach // 각각의 테스트가 수행된 직후에 호출
 	void afterEach() throws SQLException {
 		List<String> memberList = List.of(MEMBER_A, MEMBER_B, MEMBER_EX);
 		for (String memberId : memberList) {

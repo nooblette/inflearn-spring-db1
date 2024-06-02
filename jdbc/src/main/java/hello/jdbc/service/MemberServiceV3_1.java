@@ -45,7 +45,7 @@ public class MemberServiceV3_1 {
 		Member fromMember = memberRepository.findById(fromId);
 		Member toMember = memberRepository.findById(toId);
 
-		// 계좌이체 출금, 트랜잭션이 없으므로 사실상 autocommit 모드로 수행된다.(SQL이 실행되고 나서 자동으로 커밋되어 데이터베이스에 수정사항을 반영한다.)
+		// 계좌이체 출금
 		memberRepository.update(fromId, fromMember.getMoney() - money);
 
 		// 입금
