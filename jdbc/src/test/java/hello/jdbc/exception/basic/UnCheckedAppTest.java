@@ -16,6 +16,17 @@ public class UnCheckedAppTest {
 			.isInstanceOf(RuntimeSQLException.class);
 	}
 
+	@Test
+	void printException(){
+		Controller controller = new Controller();
+		try {
+			controller.request();
+		} catch (Exception e) {
+			// e.printStackTrace();
+			log.info("ex", e);
+		}
+	}
+
 	static class Controller {
 		Service service = new Service();
 
@@ -49,7 +60,8 @@ public class UnCheckedAppTest {
 				// 체크 예외를 런타임 예외로 변환해서 던진다.
 				// 이때 기존에 예외 인스턴스(e)를 그대로 던져준다 (stacktrace를 확인하기 위함)
 				log.info("message: {}", e.getMessage(), e);
-				throw new RuntimeSQLException(e);
+				// throw new RuntimeSQLException(e);
+				throw new RuntimeSQLException();
 			}
 		}
 
@@ -68,6 +80,9 @@ public class UnCheckedAppTest {
 		// Throwable error : 이전에 발생한 예외 정보(스택 트레이스)를 그대로 가져온다.
 		public RuntimeSQLException(Throwable error) {
 			super(error);
+		}
+
+		public RuntimeSQLException() {
 		}
 	}
 }
