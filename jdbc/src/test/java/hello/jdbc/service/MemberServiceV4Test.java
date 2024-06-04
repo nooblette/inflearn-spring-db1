@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepository;
-import hello.jdbc.repository.MemberRepositoryV4_1;
+import hello.jdbc.repository.MemberRepositoryV4_2;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -53,13 +53,13 @@ class MemberServiceV4Test {
 
 		// 데이터 소스와 트랜잭션 매니저는 스프링 부트가 자동으로 주입해준다.
 		@Bean
-		MemberRepositoryV4_1 memberRepositoryV4_1(){
-			return new MemberRepositoryV4_1(dataSource);
+		MemberRepositoryV4_2 memberRepositoryV4_2(){
+			return new MemberRepositoryV4_2(dataSource);
 		}
 
 		@Bean
 		MemberServiceV4 memberServiceV4(){
-			return new MemberServiceV4(memberRepositoryV4_1());
+			return new MemberServiceV4(memberRepositoryV4_2());
 		}
 	}
 
