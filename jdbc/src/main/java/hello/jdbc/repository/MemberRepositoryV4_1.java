@@ -28,7 +28,7 @@ public class MemberRepositoryV4_1 implements MemberRepository {
 
 	private final DataSource dataSource;
 
-	@Override // 오버라이딩한 메서드이ㅡ 문법(파라미터 타입, 개수) 등을 준수했는지 컴파일러가 검사
+	@Override // 오버라이딩한 메서드의 문법(파라미터 타입, 개수) 등을 준수했는지 컴파일러가 검사
 	public Member save(Member member) {
 		String sql = "insert into member(member_id, money) values (?, ?)";
 
